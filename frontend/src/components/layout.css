@@ -1,0 +1,51 @@
+a {
+  color: #fff;
+}
+
+h1 {
+  text-align: center;
+}
+
+.attribution {
+  font-size: 10px;
+  color: #333;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
+.image {
+  position: fixed;
+  right: 10vw;
+  bottom: 10vh;
+  width: 35vw;
+  z-index: -1;
+  /* height: 6em; */
+  /* padding: 1.5em; */
+  /* will-change: filter;
+  transition: filter 300ms; */
+}
+.image:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+.image.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes image-spin {
+  0% {
+    transform: translate(-20, 10px) rotate(5deg);
+  }
+  50% {
+    transform: translate(10px, 0) rotate(-5deg);
+  }
+  100% {
+    transform: translate(-20, 10px) rotate(5deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .image {
+    animation: image-spin infinite 10s ease-in-out;
+  }
+}

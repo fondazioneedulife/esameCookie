@@ -1,0 +1,16 @@
+{
+  "name": "secret-santa-its-cookie-esame-2024",
+  "version": "1.0.0",
+  "workspaces": [
+    "api",
+    "backend",
+    "frontend"
+  ],
+  "scripts": {},
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "prettier": "^3.4.2"
+  }
+}
