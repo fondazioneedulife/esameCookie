@@ -1,5 +1,4 @@
 import { User } from "../../api";
-import { SessionUser } from "../types/session";
 import DB from "./db";
 
 const userSchema = new DB.Schema(
@@ -23,7 +22,7 @@ export const UserModel = DB.model("user", userSchema);
 /**
  * Visualizza un utente
  */
-export const view = async (id: string, currentUser?: SessionUser) => {
+export const find = async (id: string) => {
   return UserModel.findById(id);
 };
 
@@ -35,4 +34,18 @@ export const add = async (
 ) => {
   const UserData = new UserModel(user);
   return UserData.save();
+};
+
+/**
+ * Ritorna il destinatario del regalo, se estratto
+ */
+export const getRecipient = async (userId: string) => {
+  const user = await UserModel.findById(userId);
+  const recipientId = user?.get("recipient");
+  if (recipientId) {
+    const recipient = await UserModel.findById(recipientId);
+    const recipientObject = recipient && recipient.toObject();
+    const { password, ...filtered } = recipientObject; // remove password
+    return filtered;
+  }
 };

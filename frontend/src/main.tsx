@@ -5,6 +5,10 @@ import App from "./App.tsx";
 import "./index.css";
 
 const theme = extendTheme({
+  fontFamily: {
+    display: "Merienda", // applies to `h1`–`h4`
+    body: "Merienda", // applies to `title-*` and `body-*`
+  },
   colorSchemes: {
     light: {
       palette: {
@@ -18,7 +22,7 @@ const theme = extendTheme({
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <CssVarsProvider defaultMode="dark" theme={theme}>
+    <CssVarsProvider defaultMode="light" theme={theme}>
       <CssBaseline disableColorScheme />
       <App />
     </CssVarsProvider>

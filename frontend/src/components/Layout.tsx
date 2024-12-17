@@ -1,15 +1,30 @@
-import { Container } from "@mui/joy";
-import { Outlet } from "react-router-dom";
+import { Box, Container } from "@mui/joy";
+import { Link, Outlet } from "react-router-dom";
 import santaclaus from "../assets/santaclaus.svg";
-import { AnimatedBackground } from "../lib/AnimatedBackground";
+import { AnimatedBackground } from "./AnimatedBackground";
 import "./layout.css";
 
 export const Layout: React.FC = () => {
   return (
     <>
-      <Container maxWidth={false}>
+      <Box>
+        <h1 className="main-title">
+          <Link to="/">Secret Santa</Link>
+        </h1>
+      </Box>
+      <Box
+        className="logout"
+        sx={{
+          position: "absolute",
+          top: "20px",
+          right: "20px",
+          fontSize: "sm",
+        }}
+      >
+        <Link to="/logout">Logout</Link>
+      </Box>
+      <Container maxWidth="md" className="main-content">
         <Container>
-          <h1>Secret Santa</h1>
           <Outlet />
         </Container>
       </Container>

@@ -20,23 +20,23 @@ export const useFetch = (): AuthenticatedFetchFunction => {
   const navigate = useNavigate();
 
   return (input, init) => {
-    try {
-      const body = init?.body && JSON.stringify(init.body);
-      return fetch(input, {
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body,
-        ...init,
-      }).then((res) => {
+    const body = init?.body && JSON.stringify(init.body);
+    return fetch(input, {
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body,
+      ...init,
+    })
+      .then((res) => {
         if (res.status === 401) {
           return navigate(`${config.APP_BASENAME}login`);
         }
         return res;
+      })
+      .catch((e) => {
+        return Promise.reject(e);
       });
-    } catch (e) {
-      return Promise.reject(e);
-    }
   };
 };

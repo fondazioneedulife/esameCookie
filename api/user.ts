@@ -26,6 +26,11 @@ export type User = {
   password: string;
 
   /**
+   * Destinatario del regalo
+   */
+  recipient: string;
+
+  /**
    * Data di registrazione
    */
   created_at: string;

@@ -1,22 +1,31 @@
-import { Box, Button, Checkbox, FormHelperText, Input, Typography } from '@mui/joy';
-import FormControl from '@mui/joy/FormControl';
-import FormLabel from '@mui/joy/FormLabel';
-import React, { useState } from 'react';
-import { config } from '../config';
+import {
+  Box,
+  Button,
+  Checkbox,
+  FormHelperText,
+  Input,
+  Typography,
+} from "@mui/joy";
+import FormControl from "@mui/joy/FormControl";
+import FormLabel from "@mui/joy/FormLabel";
+import React, { useState } from "react";
+import { useNavigate } from "react-router";
+import { config } from "../config";
 
 export const Register: React.FC = () => {
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [strength, setStrength] = useState(0);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [formData, setFormData] = useState({
-    first_name: '',
-    last_name: '',
-    email: '',
-    password: '',
+    first_name: "",
+    last_name: "",
+    email: "",
+    password: "",
   });
+  const navigate = useNavigate();
 
   const evaluatePasswordStrength = (password: string) => {
     let score = 0;
@@ -34,7 +43,9 @@ export const Register: React.FC = () => {
     setStrength(evaluatePasswordStrength(newPassword));
   };
 
-  const handleConfirmPasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleConfirmPasswordChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     setConfirmPassword(event.target.value);
   };
 
@@ -47,22 +58,27 @@ export const Register: React.FC = () => {
     event.preventDefault();
 
     if (password !== confirmPassword) {
-      setError('Le password non corrispondono.');
+      setError("Le password non corrispondono.");
       return;
     }
 
-    if (!formData.first_name || !formData.last_name || !formData.email || !formData.password) {
-      setError('Tutti i campi sono obbligatori.');
+    if (
+      !formData.first_name ||
+      !formData.last_name ||
+      !formData.email ||
+      !formData.password
+    ) {
+      setError("Tutti i campi sono obbligatori.");
       return;
     }
 
-    setError('');
+    setError("");
 
     try {
       const response = await fetch(`${config.API_BASEPATH}/auth/register`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           first_name: formData.first_name,
@@ -77,28 +93,27 @@ export const Register: React.FC = () => {
       }
 
       const data = await response.json();
-      alert('Registrazione completata con successo!');
-      console.log('Risposta API:', data);
+      navigate("/login");
     } catch (error) {
-      setError('Si è verificato un errore durante la registrazione.');
+      setError("Si è verificato un errore durante la registrazione.");
       console.error(error);
     }
   };
 
   const getBarColor = (index: number) => {
     if (strength >= index + 1) {
-      return ['#FF4C4C', '#FF8C42', '#FBD83D', '#4CAF50'][index];
+      return ["#FF4C4C", "#FF8C42", "#FBD83D", "#4CAF50"][index];
     }
-    return '#E0E0E0';
+    return "#E0E0E0";
   };
 
   return (
     <form
       onSubmit={handleSubmit}
-      style={{ padding: '20px', maxWidth: '400px', margin: 'auto' }}
+      style={{ padding: "20px", maxWidth: "400px", margin: "auto" }}
     >
-      <Typography level="h2" component="h1" sx={{ mb: 2 }}>
-        Sign-up
+      <Typography level="h3" component="h3" sx={{ mb: 2 }}>
+        Registrati
       </Typography>
 
       <FormControl>
@@ -147,52 +162,53 @@ export const Register: React.FC = () => {
       <FormControl>
         <FormLabel>Password</FormLabel>
         <Input
-          type={showPassword ? 'text' : 'password'}
+          type={showPassword ? "text" : "password"}
           placeholder="Inserisci la tua password"
           value={password}
           onChange={handlePasswordChange}
           sx={{ mb: 1 }}
         />
-        <Box sx={{ display: 'flex', gap: '4px', mb: 1 }}>
+        <Box sx={{ display: "flex", gap: "4px", mb: 1 }}>
           {[...Array(4)].map((_, index) => (
             <Box
               key={index}
               sx={{
-                height: '10px',
-                width: '25%',
+                height: "10px",
+                width: "25%",
                 backgroundColor: getBarColor(index),
-                borderRadius: '2px',
+                borderRadius: "2px",
               }}
             />
           ))}
         </Box>
-        <FormHelperText sx={{ mb: 2 }}>
-          La password deve essere lunga almeno 8 caratteri e contenere lettere maiuscole, minuscole, numeri e simboli speciali.
+        <FormHelperText sx={{ mb: 2, color: "#fff" }}>
+          La password deve essere lunga almeno 8 caratteri e contenere lettere
+          maiuscole, minuscole, numeri e simboli speciali.
         </FormHelperText>
-        <Checkbox
-          checked={showPassword}
-          onChange={() => setShowPassword(!showPassword)}
-          label="Mostra password"
-          sx={{ mb: 2 }}
-        />
       </FormControl>
+      <Checkbox
+        checked={showPassword}
+        onChange={() => setShowPassword(!showPassword)}
+        label="Mostra password"
+        sx={{ mb: 2 }}
+      />
 
       <FormControl>
         <FormLabel>Conferma password</FormLabel>
         <Input
-          type={showConfirmPassword ? 'text' : 'password'}
+          type={showConfirmPassword ? "text" : "password"}
           placeholder="Conferma la password"
           value={confirmPassword}
           onChange={handleConfirmPasswordChange}
           sx={{ mb: 1 }}
         />
-        <Checkbox
-          checked={showConfirmPassword}
-          onChange={() => setShowConfirmPassword(!showConfirmPassword)}
-          label="Mostra conferma password"
-          sx={{ mb: 2 }}
-        />
       </FormControl>
+      <Checkbox
+        checked={showConfirmPassword}
+        onChange={() => setShowConfirmPassword(!showConfirmPassword)}
+        label="Mostra conferma password"
+        sx={{ mb: 2 }}
+      />
 
       {error && (
         <Typography color="danger" sx={{ mb: 2 }}>

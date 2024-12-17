@@ -1,7 +1,6 @@
 import Router from "@koa/router";
 import { User } from "../../api";
-import { login } from "../services/auth";
-import { add } from "../services/user";
+import { login, register } from "../services/auth";
 import { AuthenticatedContext } from "../types/session";
 
 const router = new Router({
@@ -9,7 +8,7 @@ const router = new Router({
 });
 
 /**
- *  Register
+ * Register
  */
 router.post("/register", async (ctx) => {
   ctx.accepts("json");
@@ -22,7 +21,7 @@ router.post("/register", async (ctx) => {
   }
 
   try {
-    const result = await add(newUser);
+    const result = await register(newUser);
     ctx.status = 201;
     ctx.body = { message: "User registered successfully", user: result };
   } catch (error) {
@@ -64,7 +63,7 @@ router.post<unknown, AuthenticatedContext>("/login", async (ctx) => {
     ctx.session.user = sessionUser;
 
     ctx.status = 200;
-    ctx.body = { message: "Login successful", user };
+    ctx.body = sessionUser;
   } catch (error) {
     ctx.status = 500;
     ctx.body = { error: "An error occurred during login" };
@@ -75,7 +74,7 @@ router.post<unknown, AuthenticatedContext>("/login", async (ctx) => {
 /**
  * Logout
  */
-router.get("/logout", (ctx) => {
+router.get("/logout", async (ctx) => {
   ctx.session = null;
   ctx.response.status = 200;
 });

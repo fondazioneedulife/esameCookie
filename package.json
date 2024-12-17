@@ -12,5 +12,11 @@
   "description": "",
   "dependencies": {
     "prettier": "^3.4.2"
+  },
+  "engines": {
+    "node": "20.15.0"
+  },
+  "volta": {
+    "node": "20.15.0"
   }
 }

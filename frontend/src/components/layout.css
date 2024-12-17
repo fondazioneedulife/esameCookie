@@ -2,7 +2,20 @@ a {
   color: #fff;
 }
 
-h1 {
+h1.main-title {
+  position: absolute;
+  top: 0;
+  text-align: center;
+  font-size: 1em;
+  a {
+    text-decoration: none;
+  }
+}
+.logout a {
+  text-decoration: none;
+}
+
+.main-content {
   text-align: center;
 }
 
@@ -34,18 +47,18 @@ h1 {
 
 @keyframes image-spin {
   0% {
-    transform: translate(-20, 10px) rotate(5deg);
+    transform: translate(-30px, 10px) rotate(10deg);
   }
   50% {
-    transform: translate(10px, 0) rotate(-5deg);
+    transform: translate(30px, 0) rotate(-5deg);
   }
   100% {
-    transform: translate(-20, 10px) rotate(5deg);
+    transform: translate(-30px, 10px) rotate(10deg);
   }
 }
 
 @media (prefers-reduced-motion: no-preference) {
   .image {
-    animation: image-spin infinite 10s ease-in-out;
+    animation: image-spin infinite 5s ease-in-out;
   }
 }
