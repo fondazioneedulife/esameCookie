@@ -1,22 +1,59 @@
 import { Box, Stack, Typography } from "@mui/joy";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { User } from "../../../api";
 import { TaskBox } from "../components/TaskBox";
 import { useCurrentUser } from "../lib/useCurrentUser";
-// import { config } from "../config";
-// import { useFetch } from "../lib/useFetch";
-
-// TODO Task 1 - implementa la logica che manca: estrai il destinatario (chiamando una api) e visualizza il risultato
 
 export const Extract: React.FC = () => {
   const currentUser = useCurrentUser();
-  const [recipient] = useState<User | null>();
-  const [error] = useState();
+  const [recipient, setRecipient] = useState<User | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  
 
-  // const fetch = useFetch();
+  const fetchRecipient = async () => {
+    setLoading(true); 
+    setError(null); 
+
+    try {
+      const response = await fetch("http://localhost:3000/api/extract", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`, // Usa il token salvato
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Errore durante l'estrazione");
+      }
+
+      const data = await response.json();
+      setRecipient(data.recipient); // Aggiorna lo stato con il destinatario
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false); // Fine del caricamento
+    }
+  };
+
+  // Effetto per chiamare fetchRecipient all'avvio
+  useEffect(() => {
+    fetchRecipient();
+  }, []);
+
+  // Gestione degli stati
+  if (loading) {
+    return "Attendi mentre estraggo il destinatario...";
+  }
 
   if (error) {
-    return "Mi dispiace, tutti i destinatari sono stati già estratti";
+    return (
+      <TaskBox>
+        Mi dispiace, tutti i destinatari sono stati già estratti: {error}
+      </TaskBox>
+    );
   }
 
   if (!recipient) {
@@ -25,8 +62,7 @@ export const Extract: React.FC = () => {
         Mmmmhh.... mi sa che manca la funzione per estrarre il destinatario,
         scrivila tu!
       </TaskBox>
-    ); // quando hai finito, togli questa riga e usa la seguente
-    return "Attendi mentre estraggo il destinatario....";
+    );
   }
 
   return (

@@ -49,3 +49,14 @@ export const getRecipient = async (userId: string) => {
     return filtered;
   }
 };
+export const saveRecipient = async (userId: string) => {
+  const user = await UserModel.findById(userId);
+  const recipientId = user?.get("recipient");
+  if (recipientId) {
+    const recipient = await UserModel.findById(recipientId);
+    const recipientObject = recipient && recipient.toObject();
+    const { password, ...filtered } = recipientObject; // remove password
+    return filtered;
+  }
+};
+
