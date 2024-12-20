@@ -19,16 +19,12 @@ const userSchema = new DB.Schema(
 
 export const UserModel = DB.model("user", userSchema);
 
-/**
- * Visualizza un utente
- */
+
 export const find = async (id: string) => {
   return UserModel.findById(id);
 };
 
-/**
- * Aggiunge un nuovo utente
- */
+
 export const add = async (
   user: Omit<User, "_id" | "created_at" | "updated_at">,
 ) => {
@@ -36,16 +32,14 @@ export const add = async (
   return UserData.save();
 };
 
-/**
- * Ritorna il destinatario del regalo, se estratto
- */
+
 export const getRecipient = async (userId: string) => {
   const user = await UserModel.findById(userId);
   const recipientId = user?.get("recipient");
   if (recipientId) {
     const recipient = await UserModel.findById(recipientId);
     const recipientObject = recipient && recipient.toObject();
-    const { password, ...filtered } = recipientObject; // remove password
+    const { password, ...filtered } = recipientObject;
     return filtered;
   }
 };
