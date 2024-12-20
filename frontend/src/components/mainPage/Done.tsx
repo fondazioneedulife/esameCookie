@@ -1,17 +1,40 @@
 import { Box, Stack, Typography } from "@mui/joy";
 import { useCurrentUser } from "../../lib/useCurrentUser";
-import { TaskBox } from "../TaskBox";
-// import { useEffect, useState } from "react";
-// import { User } from "../../../../api";
-// import { config } from "../../config";
-// import { useFetch } from "../../lib/useFetch";
+// import { TaskBox } from "../TaskBox";
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { User } from "../../../../api";
+import { config } from "../../config";
+import { useFetch } from "../../lib/useFetch";
 
 // TODO Task 2 - implementa la chiamata api per recuperare il destinatario del regalo
 
 export const Done: React.FC = () => {
   const currentUser = useCurrentUser();
 
-  // const fetch = useFetch();
+  const navigate = useNavigate();
+
+  const [recipient, setRecipient] = useState<User | null>();
+  
+  const fetch = useFetch();
+
+  useEffect(() => {
+      fetch(`${config.API_BASEPATH}/api/recipient`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        }
+      }).then((res) => {
+        if (res) {
+          res.json().then((data) => {
+            setRecipient(data);
+          });
+        }
+        }).catch((e) => {
+          navigate("/");
+        });
+      }, []);
+    
 
   return (
     <Stack
@@ -29,17 +52,9 @@ export const Done: React.FC = () => {
       </Box>
       <Box>
         <Typography level="h2" sx={{ fontSize: "2em", mt: 5 }}>
-          {/** Metti qui il nome e cognome del destinatario */}
+          {recipient?.first_name} {recipient?.last_name}
         </Typography>
       </Box>
-
-      {/** ...e poi cancella questo messaggio */}
-      <TaskBox>
-        ... ops, non lo sappiamo!
-        <br />
-        Devi implementare una funzione che mi permetta di conoscere il
-        destinatario del regalo!
-      </TaskBox>
     </Stack>
   );
 };
