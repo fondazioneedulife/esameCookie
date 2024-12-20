@@ -1,13 +1,11 @@
 import { Box, Stack, Typography } from "@mui/joy";
 import { useEffect, useState } from "react";
 import { User } from "../../../api";
-import { TaskBox } from "../components/TaskBox";
+// import { TaskBox } from "../components/TaskBox";
 import { useCurrentUser } from "../lib/useCurrentUser";
 import { useFetch } from "../lib/useFetch";
 import { config } from "../config";
 import { useNavigate } from "react-router";
-// import { config } from "../config";
-// import { useFetch } from "../lib/useFetch";
 
 // TODO Task 1 - implementa la logica che manca: estrai il destinatario (chiamando una api) e visualizza il risultato
 
@@ -51,12 +49,6 @@ export const Extract: React.FC = () => {
   }
 
   if (!recipient) {
-    return (
-      <TaskBox>
-        Mmmmhh.... mi sa che manca la funzione per estrarre il destinatario,
-        scrivila tu!
-      </TaskBox>
-    ); // quando hai finito, togli questa riga e usa la seguente
     return "Attendi mentre estraggo il destinatario....";
   }
 
