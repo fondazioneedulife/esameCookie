@@ -18,7 +18,6 @@ export type AuthenticatedFetchFunction = (
  */
 export const useFetch = (): AuthenticatedFetchFunction => {
   const navigate = useNavigate();
-
   return (input, init) => {
     const body = init?.body && JSON.stringify(init.body);
     return fetch(input, {

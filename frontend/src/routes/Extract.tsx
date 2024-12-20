@@ -1,8 +1,10 @@
 import { Box, Stack, Typography } from "@mui/joy";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { User } from "../../../api";
 import { TaskBox } from "../components/TaskBox";
 import { useCurrentUser } from "../lib/useCurrentUser";
+import { useFetch } from "../lib/useFetch";
+import { config } from "../config";
 // import { config } from "../config";
 // import { useFetch } from "../lib/useFetch";
 
@@ -10,10 +12,33 @@ import { useCurrentUser } from "../lib/useCurrentUser";
 
 export const Extract: React.FC = () => {
   const currentUser = useCurrentUser();
-  const [recipient] = useState<User | null>();
-  const [error] = useState();
+  const [recipient, setRecipient] = useState<User | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const fetch = useFetch();
 
-  // const fetch = useFetch();
+  useEffect(() => {
+    const fetchRecipient = async () => {
+      try {
+        const response = await fetch(`${config.API_BASEPATH}/api/extract`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(currentUser),
+        });
+        const user: User = await response.json();
+        setRecipient(user);
+      } catch (err) {
+        console.error("Errore nella richiesta API:", err);
+        setError("Errore nella richiesta API");
+      }
+    };
+    if (currentUser) {
+      fetchRecipient();
+    }
+  }, []);
+
+  
 
   if (error) {
     return "Mi dispiace, tutti i destinatari sono stati già estratti";
