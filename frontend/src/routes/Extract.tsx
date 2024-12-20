@@ -5,6 +5,7 @@ import { TaskBox } from "../components/TaskBox";
 import { useCurrentUser } from "../lib/useCurrentUser";
 import { useFetch } from "../lib/useFetch";
 import { config } from "../config";
+import { useNavigate } from "react-router";
 // import { config } from "../config";
 // import { useFetch } from "../lib/useFetch";
 
@@ -15,8 +16,13 @@ export const Extract: React.FC = () => {
   const [recipient, setRecipient] = useState<User | null>(null);
   const [error, setError] = useState<string | null>(null);
   const fetch = useFetch();
+  const navigate = useNavigate();
+
 
   useEffect(() => {
+    if(recipient){
+      navigate("/");
+    }
     const fetchRecipient = async () => {
       try {
         const response = await fetch(`${config.API_BASEPATH}/api/extract`, {
