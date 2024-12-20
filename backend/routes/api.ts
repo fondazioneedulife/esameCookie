@@ -39,4 +39,9 @@ router.get("/extract", async (ctx) => {
   const recipient = await extract(ctx.session.user._id);
   ctx.response.body = recipient;
 })
+
+router.get("/recipient", async (ctx) => {
+  const recipient = await getRecipient(ctx.session.user._id);
+  ctx.response.body = recipient;
+})
 export default router;
