@@ -1,6 +1,6 @@
 import Router from "@koa/router";
 import { Status, StatusPayload } from "../../api/index";
-import { hasReachedThreshold } from "../services/bucket";
+import { extract, hasReachedThreshold } from "../services/bucket";
 import { getRecipient } from "../services/user";
 import { AuthenticatedContext } from "../types/session";
 import { authMiddleware } from "./auth";
@@ -34,5 +34,23 @@ router.get("/status", async (ctx) => {
 
   ctx.body = { status } as StatusPayload;
 });
+
+router.post("/extract", async (ctx) => {
+  console.log("Route POST /extract");
+  try {
+    // Verifica se l'utente è autenticato
+    const userId = ctx.session.user._id;
+    const recipient = await extract(userId);
+    ctx.body = recipient;
+  } catch (error) {
+    console.error("Errore nella route POST /extract:", error);
+    ctx.status = 500;
+    ctx.body = { error: "Errore interno del server." };
+  }
+});
+
+
+
+
 
 export default router;

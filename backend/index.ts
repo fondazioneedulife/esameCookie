@@ -19,7 +19,7 @@ app.use(
   session(
     {
       key: "session",
-      // secure: process.env.NODE_ENV === "production",
+      //secure: process.env.NODE_ENV === "production",
     },
     app,
   ),

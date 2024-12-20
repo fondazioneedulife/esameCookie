@@ -58,7 +58,7 @@ router.post<unknown, AuthenticatedContext>("/login", async (ctx) => {
 
     // Autentica la sessione
     ctx.session.authenticated = true;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // eslint - disable - next - line @typescript-eslint / no - unused - vars
     const { password: _, ...sessionUser } = user;
     ctx.session.user = sessionUser;
 
@@ -92,3 +92,5 @@ export const authMiddleware =
     }
     ctx.status = 401;
   };
+
+
