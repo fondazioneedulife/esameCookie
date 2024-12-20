@@ -1,9 +1,11 @@
 import Router from "@koa/router";
 import { Status, StatusPayload } from "../../api/index";
-import { hasReachedThreshold } from "../services/bucket";
+import { hasReachedThreshold, extract } from "../services/bucket";
 import { getRecipient } from "../services/user";
 import { AuthenticatedContext } from "../types/session";
 import { authMiddleware } from "./auth";
+import { User } from "../../api";
+
 
 const router = new Router<unknown, AuthenticatedContext>({
   prefix: "/api",
@@ -18,6 +20,8 @@ router.use(authMiddleware());
  * - DONE: destinatario già estratto
  * - 401 UNAUTHORIZED: sessione scaduta, vai a login
  */
+
+
 router.get("/status", async (ctx) => {
   let status: Status;
   if (await !hasReachedThreshold()) {
@@ -33,6 +37,24 @@ router.get("/status", async (ctx) => {
   }
 
   ctx.body = { status } as StatusPayload;
+});
+
+router.post("/extract", async (ctx) => {
+  console.log("qualcosa");
+
+  const response = await extract(ctx.session.user._id);
+
+  console.log(response)
+
+  if(!response){
+    ctx.status = 400;
+    ctx.response.body = {
+      message: "Nessun destinatario trovato",
+    };
+  }else{
+    ctx.response.body = response
+  }
+
 });
 
 export default router;

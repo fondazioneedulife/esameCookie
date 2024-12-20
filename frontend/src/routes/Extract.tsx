@@ -1,32 +1,50 @@
 import { Box, Stack, Typography } from "@mui/joy";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { User } from "../../../api";
-import { TaskBox } from "../components/TaskBox";
 import { useCurrentUser } from "../lib/useCurrentUser";
-// import { config } from "../config";
-// import { useFetch } from "../lib/useFetch";
+import { useNavigate } from "react-router-dom";
 
 // TODO Task 1 - implementa la logica che manca: estrai il destinatario (chiamando una api) e visualizza il risultato
 
 export const Extract: React.FC = () => {
   const currentUser = useCurrentUser();
-  const [recipient] = useState<User | null>();
-  const [error] = useState();
+  const [recipient, setRecipient] = useState<Partial<User> | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
-  // const fetch = useFetch();
+  useEffect(() => {
+    if (!currentUser) {
+      navigate("/login");
+    } else {
+      getDestinatario();
+    }
+  }, [currentUser, navigate]);
+
+  const getDestinatario = () => {
+    fetch("http://localhost:3000/api/extract", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setRecipient(data);
+      })
+      .catch((error) => {
+        setError("Mi dispiace, tutti i destinatari sono stati già estratti");
+      });
+  };
 
   if (error) {
-    return "Mi dispiace, tutti i destinatari sono stati già estratti";
+    return <div>{error}</div>;
   }
 
   if (!recipient) {
-    return (
-      <TaskBox>
-        Mmmmhh.... mi sa che manca la funzione per estrarre il destinatario,
-        scrivila tu!
-      </TaskBox>
-    ); // quando hai finito, togli questa riga e usa la seguente
-    return "Attendi mentre estraggo il destinatario....";
+    return <div>Attendi mentre estraggo il destinatario....</div>;
   }
 
   return (

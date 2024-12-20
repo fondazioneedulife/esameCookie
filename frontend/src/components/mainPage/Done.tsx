@@ -1,8 +1,8 @@
 import { Box, Stack, Typography } from "@mui/joy";
 import { useCurrentUser } from "../../lib/useCurrentUser";
 import { TaskBox } from "../TaskBox";
-// import { useEffect, useState } from "react";
-// import { User } from "../../../../api";
+import { useEffect, useState } from "react";
+import { User } from "../../../../api";
 // import { config } from "../../config";
 // import { useFetch } from "../../lib/useFetch";
 
@@ -11,7 +11,18 @@ import { TaskBox } from "../TaskBox";
 export const Done: React.FC = () => {
   const currentUser = useCurrentUser();
 
-  // const fetch = useFetch();
+  const [recipient, setRecipient] = useState<Partial<User> | null>(null);
+
+  useEffect(() => {
+    fetch('http://localhost:3000/api/status')
+      .then((response) => response.json())
+      .then((data) => {
+        setRecipient(data);
+      })
+      console.log(recipient)
+  }, []);
+
+  
 
   return (
     <Stack
@@ -29,17 +40,9 @@ export const Done: React.FC = () => {
       </Box>
       <Box>
         <Typography level="h2" sx={{ fontSize: "2em", mt: 5 }}>
-          {/** Metti qui il nome e cognome del destinatario */}
+          {recipient?.first_name} {currentUser?.last_name}
         </Typography>
       </Box>
-
-      {/** ...e poi cancella questo messaggio */}
-      <TaskBox>
-        ... ops, non lo sappiamo!
-        <br />
-        Devi implementare una funzione che mi permetta di conoscere il
-        destinatario del regalo!
-      </TaskBox>
     </Stack>
   );
 };

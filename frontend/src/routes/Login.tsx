@@ -36,9 +36,13 @@ export const Login: React.FC = () => {
         credentials: "include",
       });
 
+      console.log(response);
+
       if (!response.ok) {
         throw new Error(`Errore: ${response.status}`);
       }
+
+      
 
       const data: User = await response.json();
       setCurrentUser(data);
