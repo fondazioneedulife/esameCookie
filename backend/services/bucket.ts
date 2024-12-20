@@ -7,7 +7,7 @@ import { UserModel, find } from "./user";
 export const hasReachedThreshold = async (): Promise<boolean> => {
   const subscriberThreshold = Number(process.env.SUBSCRIBERS_THRESHOLD);
   const subscribers = await UserModel.countDocuments().exec();
-  return subscriberThreshold < subscribers;
+  return subscriberThreshold <= subscribers;
 };
 
 /**
@@ -15,7 +15,7 @@ export const hasReachedThreshold = async (): Promise<boolean> => {
  * Se l'utente ha già estratto il suo destinatario
  * ritorna il destinatario estratto in precedenza
  */
-export const extract = async (userId) => {
+export const extract = async (userId: string) => {
   const currentUser = await find(userId);
   const hasRecipient = currentUser?.get("recipient");
 
@@ -26,11 +26,10 @@ export const extract = async (userId) => {
   }
 
   // extract recipient
-
   // get all users, excluding me
   const subscribers = await UserModel.find({ _id: { $ne: userId } }); // $ne = "not equal"
 
-  // get users already extracted (recipients)
+  // get users already extracted (recipients) , true se è già stato estratto
   const alreadyExtracted = subscribers
     .map((subscriber) => subscriber.get("recipient"))
     .filter(Boolean) as string[];
@@ -51,6 +50,6 @@ export const extract = async (userId) => {
   await currentUser?.save();
 
   const recipientObject = recipient.toObject();
-  const { passwword, ...filtered } = recipientObject; // remove password
+  const { password, ...filtered } = recipientObject; // remove password
   return filtered;
 };

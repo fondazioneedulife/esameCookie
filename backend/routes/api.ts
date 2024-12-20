@@ -1,6 +1,6 @@
 import Router from "@koa/router";
-import { Status, StatusPayload } from "../../api/index";
-import { hasReachedThreshold } from "../services/bucket";
+import { Status, StatusPayload, User } from "../../api/index";
+import { extract, hasReachedThreshold } from "../services/bucket";
 import { getRecipient } from "../services/user";
 import { AuthenticatedContext } from "../types/session";
 import { authMiddleware } from "./auth";
@@ -20,7 +20,7 @@ router.use(authMiddleware());
  */
 router.get("/status", async (ctx) => {
   let status: Status;
-  if (await !hasReachedThreshold()) {
+  if (!hasReachedThreshold) {
     status = "WAIT";
   }
 
@@ -34,5 +34,28 @@ router.get("/status", async (ctx) => {
 
   ctx.body = { status } as StatusPayload;
 });
+
+
+router.post("/extract", async (ctx) => {
+  const recipient = await extract(ctx.session.user._id);
+
+  if (!recipient) {
+    return "Error";
+  }
+
+  ctx.body = { recipient } ;
+  
+})
+
+router.get("/extract/done", async (ctx) => {
+  const recipient = await getRecipient(ctx.session.user._id);
+
+  if (!recipient) {
+    return ("Error 404");
+  }
+
+  ctx.body = { recipient } ;
+  
+})
 
 export default router;
