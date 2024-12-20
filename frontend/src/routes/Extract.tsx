@@ -1,31 +1,41 @@
 import { Box, Stack, Typography } from "@mui/joy";
 import { useState } from "react";
-import { User } from "../../../api";
-import { TaskBox } from "../components/TaskBox";
+import { User, Status } from "../../../api";
 import { useCurrentUser } from "../lib/useCurrentUser";
-// import { config } from "../config";
-// import { useFetch } from "../lib/useFetch";
+import { config } from "../config";
+import { useFetch } from "../lib/useFetch";
+import { useEffect } from "react";
 
 // TODO Task 1 - implementa la logica che manca: estrai il destinatario (chiamando una api) e visualizza il risultato
 
 export const Extract: React.FC = () => {
   const currentUser = useCurrentUser();
-  const [recipient] = useState<User | null>();
-  const [error] = useState();
+  const [recipient, setRecipient] = useState<User | null>();
+  const [error, setError] = useState();
+  const [status, setStatus] = useState<Status>();
 
-  // const fetch = useFetch();
+  const fetch = useFetch();
+
+  useEffect(() => {
+      fetch(`${config.API_BASEPATH}/api/extract`, {
+        method: "POST",
+        body: JSON.stringify(currentUser),
+        headers: { "Content-Type": "application/json" },
+    })
+      .then((res) => res && res.json())
+      .then((data) => {
+        setRecipient(data);
+      })
+      .catch((e) => {
+        setError(e);
+      });
+    }, []);
 
   if (error) {
     return "Mi dispiace, tutti i destinatari sono stati già estratti";
   }
 
   if (!recipient) {
-    return (
-      <TaskBox>
-        Mmmmhh.... mi sa che manca la funzione per estrarre il destinatario,
-        scrivila tu!
-      </TaskBox>
-    ); // quando hai finito, togli questa riga e usa la seguente
     return "Attendi mentre estraggo il destinatario....";
   }
 
