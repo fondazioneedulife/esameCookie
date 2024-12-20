@@ -43,7 +43,12 @@ router.post("/extract", async (ctx) => {
 
 router.get("/recipient", async (ctx) => {
   const recipient = await getRecipient(ctx.session.user._id);
+  if(recipient){
   ctx.body = { recipient };
+ }else{
+  ctx.status=404;
+  ctx.body={error:"Recipient not found"}
+ }
 })
 
 export default router;
