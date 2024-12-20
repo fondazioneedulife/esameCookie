@@ -4,12 +4,28 @@ import { hasReachedThreshold } from "../services/bucket";
 import { getRecipient } from "../services/user";
 import { AuthenticatedContext } from "../types/session";
 import { authMiddleware } from "./auth";
+import { extract } from "../services/bucket";
 
 const router = new Router<unknown, AuthenticatedContext>({
   prefix: "/api",
 });
 
 router.use(authMiddleware());
+
+
+router.post("/extract", async (ctx) => {
+  const userId = ctx.session.user?._id;
+  if (!userId) {
+    ctx.throw(401, "Sessione non valida.");
+  }
+
+  try {
+    const recipient = await extract(userId);
+    ctx.body = { recipient };
+  } catch (error) {
+    ctx.throw(400, error.message);
+  }
+});
 
 /**
  * GET /status : return WAIT | PLAY | DONE  - invocata sempre dopo il login

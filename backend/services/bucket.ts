@@ -51,6 +51,6 @@ export const extract = async (userId) => {
   await currentUser?.save();
 
   const recipientObject = recipient.toObject();
-  const { passwword, ...filtered } = recipientObject; // remove password
+  const { password, ...filtered } = recipientObject; // remove password
   return filtered;
 };

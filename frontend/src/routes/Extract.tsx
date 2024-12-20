@@ -1,32 +1,57 @@
 import { Box, Stack, Typography } from "@mui/joy";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { User } from "../../../api";
 import { TaskBox } from "../components/TaskBox";
 import { useCurrentUser } from "../lib/useCurrentUser";
-// import { config } from "../config";
-// import { useFetch } from "../lib/useFetch";
-
-// TODO Task 1 - implementa la logica che manca: estrai il destinatario (chiamando una api) e visualizza il risultato
+import { useFetch } from "../lib/useFetch";
 
 export const Extract: React.FC = () => {
   const currentUser = useCurrentUser();
-  const [recipient] = useState<User | null>();
-  const [error] = useState();
+  const [recipient, setRecipient] = useState<User | null>(null);
+  const [status, setStatus] = useState<"WAIT" | "PLAY" | "DONE" | null>(null);
 
-  // const fetch = useFetch();
+  const fetch = useFetch();
 
-  if (error) {
-    return "Mi dispiace, tutti i destinatari sono stati già estratti";
-  }
+  // Controlla lo stato al caricamento del componente
+  useEffect(() => {
+    const checkStatus = async () => {
+      const response = await fetch("http://localhost:3000/api/status");
+      const data = await response.json();
+      setStatus(data.status);
+    };
 
+    checkStatus();
+  }, []);
+
+
+  const extractRecipient = async () => {
+    const response = await fetch("http://localhost:3000/api/extract", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await response.json();
+    setRecipient(data.recipient);
+  };
+  
+
+  // Effettua l'estrazione se lo stato è PLAY
+  useEffect(() => {
+    if (status === "PLAY" && !recipient) {
+      extractRecipient();
+    }
+  }, [status, recipient]);
+
+  // Renderizza i dati o un messaggio di attesa
   if (!recipient) {
     return (
       <TaskBox>
-        Mmmmhh.... mi sa che manca la funzione per estrarre il destinatario,
-        scrivila tu!
+        {status === "WAIT"
+          ? "Attendi, non ci sono ancora abbastanza iscritti..."
+          : "Attendi mentre estraggo il destinatario..."}
       </TaskBox>
-    ); // quando hai finito, togli questa riga e usa la seguente
-    return "Attendi mentre estraggo il destinatario....";
+    );
   }
 
   return (
