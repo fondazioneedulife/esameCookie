@@ -35,4 +35,8 @@ router.get("/status", async (ctx) => {
   ctx.body = { status } as StatusPayload;
 });
 
+router.post("/extract", async (ctx) => {
+  const recipient = await getRecipient(ctx.session.user._id);
+  ctx.body = recipient;
+})
 export default router;
