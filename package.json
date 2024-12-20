@@ -11,7 +11,8 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "prettier": "^3.4.2"
+    "prettier": "^3.4.2",
+    "taskbox": "^0.2.0"
   },
   "engines": {
     "node": "20.15.0"

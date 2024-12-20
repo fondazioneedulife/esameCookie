@@ -15,7 +15,7 @@ export const hasReachedThreshold = async (): Promise<boolean> => {
  * Se l'utente ha già estratto il suo destinatario
  * ritorna il destinatario estratto in precedenza
  */
-export const extract = async (userId) => {
+export const extract = async (userId: string) => {
   const currentUser = await find(userId);
   const hasRecipient = currentUser?.get("recipient");
 
@@ -26,6 +26,7 @@ export const extract = async (userId) => {
   }
 
   // extract recipient
+  
 
   // get all users, excluding me
   const subscribers = await UserModel.find({ _id: { $ne: userId } }); // $ne = "not equal"
@@ -51,6 +52,6 @@ export const extract = async (userId) => {
   await currentUser?.save();
 
   const recipientObject = recipient.toObject();
-  const { passwword, ...filtered } = recipientObject; // remove password
+  const { password, ...filtered } = recipientObject; // remove password
   return filtered;
 };
