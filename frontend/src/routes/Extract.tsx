@@ -1,7 +1,6 @@
 import { Box, Stack, Typography } from "@mui/joy";
 import { useEffect, useState } from "react";
 import { User } from "../../../api";
-import { TaskBox } from "../components/TaskBox";
 import { useCurrentUser } from "../lib/useCurrentUser";
  import { config } from "../config";
  import { useFetch } from "../lib/useFetch";
@@ -24,19 +23,14 @@ export const Extract: React.FC = () => {
       .catch((error) => {
         console.error(error);
       });
-  }, [fetch]);
+  },[]);
 
   if (error) {
     return "Mi dispiace, tutti i destinatari sono stati già estratti";
   }
 
   if (!recipient) {
-    return (
-      <TaskBox>
-        Mmmmhh.... mi sa che manca la funzione per estrarre il destinatario,
-        scrivila tu!
-      </TaskBox>
-    ); // quando hai finito, togli questa riga e usa la seguente
+    
     return "Attendi mentre estraggo il destinatario....";
   }
 
