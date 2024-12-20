@@ -8,3 +8,4 @@ export type Status = "WAIT" | "PLAY" | "DONE";
 export type StatusPayload = {
   status: Status;
 };
+
