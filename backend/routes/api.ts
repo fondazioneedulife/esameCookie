@@ -4,6 +4,7 @@ import { hasReachedThreshold } from "../services/bucket";
 import { getRecipient } from "../services/user";
 import { AuthenticatedContext } from "../types/session";
 import { authMiddleware } from "./auth";
+import { extract } from "../services/bucket";
 
 const router = new Router<unknown, AuthenticatedContext>({
   prefix: "/api",
@@ -34,5 +35,15 @@ router.get("/status", async (ctx) => {
 
   ctx.body = { status } as StatusPayload;
 });
+
+router.post("/extract", async (ctx) => {
+  const recipient= await extract(ctx.session.user._id);
+  ctx.body={recipient};
+})
+
+router.get("/recipient", async (ctx) => {
+  const recipient = await getRecipient(ctx.session.user._id);
+  ctx.body = { recipient };
+})
 
 export default router;
