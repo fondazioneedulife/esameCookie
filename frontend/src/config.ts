@@ -4,6 +4,7 @@ export const config: Config = {
 };
 
 type Config = {
+  [x: string]: any;
   APP_BASENAME: string;
   API_BASEPATH: string;
 };

@@ -1,10 +1,13 @@
 import { Box, Stack, Typography } from "@mui/joy";
 import { useEffect, useState } from "react";
 import { User } from "../../../api";
-// import { TaskBox } from "../components/TaskBox";
+import { TaskBox } from "../components/TaskBox";
 import { useCurrentUser } from "../lib/useCurrentUser";
 import { useFetch } from "../lib/useFetch";
 import { config } from "../config";
+import { useNavigate } from "react-router";
+// import { config } from "../config";
+// import { useFetch } from "../lib/useFetch";
 
 // TODO Task 1 - implementa la logica che manca: estrai il destinatario (chiamando una api) e visualizza il risultato
 
@@ -12,13 +15,17 @@ export const Extract: React.FC = () => {
   const currentUser = useCurrentUser();
   const [recipient, setRecipient] = useState<User | null>(null);
   const [error, setError] = useState<string | null>(null);
-  
   const fetch = useFetch();
+  const navigate = useNavigate();
+
 
   useEffect(() => {
+    if(recipient){
+      navigate("/");
+    }
     const fetchRecipient = async () => {
       try {
-        const response = await fetch(${config.API_BASEPATH}/api/extract, {
+        const response = await fetch(`${config.API_BASEPATH}/api/extract`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -44,6 +51,12 @@ export const Extract: React.FC = () => {
   }
 
   if (!recipient) {
+    return (
+      <TaskBox>
+        Mmmmhh.... mi sa che manca la funzione per estrarre il destinatario,
+        scrivila tu!
+      </TaskBox>
+    ); // quando hai finito, togli questa riga e usa la seguente
     return "Attendi mentre estraggo il destinatario....";
   }
 

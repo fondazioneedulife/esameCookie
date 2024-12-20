@@ -1,6 +1,6 @@
 import Router from "@koa/router";
 import { Status, StatusPayload } from "../../api/index";
-import { extract, hasReachedThreshold } from "../services/bucket";
+import { hasReachedThreshold, extract } from "../services/bucket";
 import { getRecipient } from "../services/user";
 import { AuthenticatedContext } from "../types/session";
 import { authMiddleware } from "./auth";
