@@ -45,7 +45,7 @@ export const getRecipient = async (userId: string) => {
   if (recipientId) {
     const recipient = await UserModel.findById(recipientId);
     const recipientObject = recipient && recipient.toObject();
-    const { password, ...filtered } = recipientObject; // remove password
+    const { ...filtered } = recipientObject; 
     return filtered;
   }
 };

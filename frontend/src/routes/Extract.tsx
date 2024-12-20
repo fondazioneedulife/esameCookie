@@ -1,32 +1,48 @@
 import { Box, Stack, Typography } from "@mui/joy";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { User } from "../../../api";
 import { TaskBox } from "../components/TaskBox";
-import { useCurrentUser } from "../lib/useCurrentUser";
-// import { config } from "../config";
-// import { useFetch } from "../lib/useFetch";
-
-// TODO Task 1 - implementa la logica che manca: estrai il destinatario (chiamando una api) e visualizza il risultato
+import { useFetch } from "../lib/useFetch";
+import { config } from "../config";
 
 export const Extract: React.FC = () => {
-  const currentUser = useCurrentUser();
-  const [recipient] = useState<User | null>();
-  const [error] = useState();
+  const [recipient, setRecipient] = useState<User | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const fetch = useFetch();
 
-  // const fetch = useFetch();
+  useEffect(() => {
+    fetch(`${config.API_BASEPATH}/api/extract`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({}),
+    })
+      .then((res) => {
+        if (res) {
+          res.json().then((data) => {
+            setRecipient(data);
+          });
+        } else {
+          setError("Errore durante l'estrazione del destinatario");
+        }
+      })
+      .catch((err) => {
+        setError("Errore di rete o del server");
+        console.error(err);
+      });
+  }, []);
 
   if (error) {
-    return "Mi dispiace, tutti i destinatari sono stati già estratti";
+    return <TaskBox>{error}</TaskBox>;
   }
 
   if (!recipient) {
     return (
       <TaskBox>
-        Mmmmhh.... mi sa che manca la funzione per estrarre il destinatario,
-        scrivila tu!
+        Attendi mentre estraggo il destinatario...
       </TaskBox>
-    ); // quando hai finito, togli questa riga e usa la seguente
-    return "Attendi mentre estraggo il destinatario....";
+    );
   }
 
   return (
@@ -38,13 +54,11 @@ export const Extract: React.FC = () => {
       }}
     >
       <Box>
-        Complimenti {currentUser?.first_name} {currentUser?.last_name}
-        <br />
-        il destinatario del tuo regalo di Natale sarà:
-      </Box>
-      <Box>
+        <Typography level="h1" sx={{ fontSize: "3em", mb: 5 }}>
+          Regalo di Natale
+        </Typography>
         <Typography level="h2" sx={{ fontSize: "2em", mt: 5 }}>
-          {recipient?.first_name} {recipient?.last_name}
+          {recipient.first_name} {recipient.last_name}
         </Typography>
       </Box>
     </Stack>

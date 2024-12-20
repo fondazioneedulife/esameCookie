@@ -11,6 +11,8 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "koa": "^2.15.3",
+    "mongoose": "^8.9.2",
     "prettier": "^3.4.2"
   },
   "engines": {
