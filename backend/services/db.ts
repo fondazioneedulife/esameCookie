@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 if (!process.env.DB_CONNECTION) {
-  throw new Error("Please configure database connection using env variable DB_CONNECTION (use .env files)");
+  throw new Error("mongodb://localhost:27017/secretsanta");
 }
 
 mongoose.connect(process.env.DB_CONNECTION);
